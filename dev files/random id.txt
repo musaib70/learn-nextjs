@@ -1,0 +1,38 @@
+ 
+generate random id from broeser through cookies
+ 
+import { v4 as uuid } from "uuid";
+import {cookies} from "next/headers" 
+
+
+
+export async function POST (request:NextRequest) {
+    
+const res = await request.json()
+
+const uid = uuid()
+const setCookies = cookies()
+
+const user_id = cookies().get("user_id")
+
+if (!user_id){ 
+setCookies.set("user_id", uid)
+}
+
+
+    try {
+        
+        const data1 = await db.insert(cartTable).values({
+            product_id: res.product_id ,
+            quantity: 1,
+            user_id: cookies().get("user_id")?.value as string
+         } ).returning();
+
+        return NextResponse.json({data1})
+
+    } catch (error) {
+        return NextResponse.json({message: "something went wrong"})
+        console.log(error);
+        
+    }
+}

@@ -1,0 +1,38 @@
+npm install drizzle-orm
+npm i -D @types/pg
+npm i -D drizzle-kit
+npm install @vercel/postgres
+	
+vercel
+		
+vercel link 
+				
+vercel env pull .env.development.local
+
+import {
+  integer,
+  pgTable,
+  serial,
+  text,
+  varchar,
+  timestamp,
+  boolean,
+} from "drizzle-orm/pg-core";
+import { drizzle } from "drizzle-orm/vercel-postgres";
+import { InferModel } from "drizzle-orm";
+import { sql } from "@vercel/postgres";
+
+export const todoTable = pgTable("todo", {
+  id: serial("id").primaryKey(),
+    user_id: varchar("user_id", {length: 250}).notNull(),
+    product_id: varchar("product_id",{length: 250}).notNull(),
+    quantity: integer("quantity").notNull()
+});
+
+export type Todo = InferModel<typeof todoTable>;
+export type NewTodo = InferModel<typeof todoTable, "insert">; // insert type
+
+export const db = drizzle(sql);
+
+
+
